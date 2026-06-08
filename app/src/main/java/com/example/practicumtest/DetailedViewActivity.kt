@@ -5,63 +5,69 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.practicumtest.databinding.ActivityDetailedViewBinding
 
 /**
- * MULTIPURPOSE DETAILED VIEW TEMPLATE
- * This activity displays detailed data retrieved from the previous screen.
+ * DETAILED VIEW: MULTIPURPOSE TEMPLATE
+ * This screen displays a comprehensive log of all the data from the parallel arrays.
  */
 class DetailedViewActivity : AppCompatActivity() {
 
+    // View Binding for activity_detailed_view.xml
     private lateinit var binding: ActivityDetailedViewBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // STEP 1: INITIALIZE VIEW BINDING
-        // binding = ActivityDetailedViewBinding.inflate(layoutInflater)
-        // setContentView(binding.root)
+        // Connects the Kotlin code to the XML layout elements.
+        binding = ActivityDetailedViewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // STEP 2: RETRIEVE DATA FROM INTENT
-        // Fetch the parallel arrays passed from the previous activity.
-        processIncomingData()
+        // STEP 2: PROCESS INCOMING DATA
+        // Retrieves the arrays passed from MainActivity and displays them.
+        displayDetailedData()
 
         // STEP 3: SETUP BACK NAVIGATION
-        // Logic to return the user to the Main Screen.
+        // Logic to return to the previous screen.
         setupBackButton()
     }
 
-    // STEP 2 (Detailed): Data Retrieval and Display Logic
-    private fun processIncomingData() {
-        // Retrieve arrays using the specific keys defined in MainActivity
-        val keys = intent.getStringArrayExtra("KEY_DAYS")
-        val values1 = intent.getDoubleArrayExtra("KEY_MIN")
-        val values2 = intent.getDoubleArrayExtra("KEY_MAX")
-        val descriptions = intent.getStringArrayExtra("KEY_CONDITIONS")
+    // --- DISPLAY & NAVIGATION ---
 
-        // DISPLAY LOGIC: Use a StringBuilder to format all data into a readable list.
-        val output = StringBuilder()
-        
-        // LOOP: Iterate through the arrays to build a summary string
-        if (keys != null && values1 != null && values2 != null && descriptions != null) {
-            for (i in keys.indices) {
-                // This structure is interchangeable for any data (Weather, Marks, Inventory, etc.)
-                output.append("Item: ${keys[i]}\n")
-                output.append("Value 1: ${values1[i]}\n")
-                output.append("Value 2: ${values2[i]}\n")
-                output.append("Notes: ${descriptions[i]}\n\n")
+    private fun displayDetailedData() {
+        // STEP 2.1: EXTRACT ARRAYS FROM INTENT
+        // Using the exact same keys we used in MainActivity to 'put' the data.
+        val categories = intent.getStringArrayExtra("KEY_CATEGORIES")
+        val val1 = intent.getDoubleArrayExtra("KEY_VAL1")
+        val val2 = intent.getDoubleArrayExtra("KEY_VAL2")
+        val notes = intent.getStringArrayExtra("KEY_COND")
+
+        // STEP 2.2: BUILD DISPLAY STRING
+        // StringBuilder is more efficient than standard String concatenation in loops.
+        val detailedLog = StringBuilder()
+
+        // STEP 2.3: LOOP THROUGH DATA
+        // Check for null to prevent app crashes if data wasn't sent correctly.
+        if (categories != null && val1 != null && val2 != null && notes != null) {
+            for (i in categories.indices) {
+                // Formatting the data for each item/day
+                detailedLog.append("Item: ${categories[i]}\n")
+                detailedLog.append("Min Temp: ${val1[i]}°C\n")
+                detailedLog.append("Max Temp: ${val2[i]}°C\n")
+                detailedLog.append("Condition: ${notes[i]}\n\n")
+                detailedLog.append("----------------------------\n\n")
             }
         }
 
-        // Apply the formatted string to a TextView (e.g., txtDisplay)
-        // binding.txtDisplay.text = output.toString()
+        // STEP 2.4: APPLY TO UI
+        // Put the entire built string into the TextView.
+        binding.txtDetailedData.text = detailedLog.toString()
     }
 
-    // STEP 3 (Detailed): Back Navigation Logic
     private fun setupBackButton() {
-        // Replace 'btnBack' with your button ID in XML
-        /*
+        // STEP 3.1: BTN CLICK LISTENER
         binding.btnBack.setOnClickListener {
-            // finish() closes this activity and returns to the previous one in the stack.
+            // STEP 3.2: CLOSE CURRENT ACTIVITY
+            // This automatically takes the user back to MainActivity.
             finish()
         }
-        */
     }
 }

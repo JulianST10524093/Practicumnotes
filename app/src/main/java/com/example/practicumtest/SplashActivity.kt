@@ -6,50 +6,54 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.practicumtest.databinding.ActivitySplashBinding
 
 /**
- * MULTIPURPOSE SPLASH SCREEN TEMPLATE
- * This is the entry point of the app, containing branding and basic navigation.
+ * SPLASH SCREEN: MULTIPURPOSE TEMPLATE
+ * This is the first screen the user sees. It handles branding and entry logic.
  */
 class SplashActivity : AppCompatActivity() {
 
+    // View Binding for activity_splash.xml
     private lateinit var binding: ActivitySplashBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // STEP 1: INITIALIZE LAYOUT
-        // Inflate the layout using View Binding to access UI elements.
-        // binding = ActivitySplashBinding.inflate(layoutInflater)
-        // setContentView(binding.root)
+        // STEP 1: INITIALIZE VIEW BINDING
+        // Connects the Kotlin code to the XML layout elements.
+        binding = ActivitySplashBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // STEP 2: SETUP NAVIGATION TO MAIN SCREEN
-        // Logic to transition from the Splash Screen to the Application Main Screen.
-        setupStartButton()
+        // STEP 2: SETUP NAVIGATION
+        // Logic to move the user from the Splash Screen to the Main Screen.
+        setupEnterAppButton()
 
         // STEP 3: SETUP EXIT LOGIC
-        // Logic to close the application from the initial screen.
-        setupExitButton()
+        // Logic to exit the application from the start.
+        setupExitAppButton()
     }
 
-    // STEP 2 (Detailed): Navigation Logic
-    private fun setupStartButton() {
-        // Replace 'btnStart' with your button ID in XML
-        /*
+    // --- NAVIGATION FUNCTIONS ---
+
+    private fun setupEnterAppButton() {
+        // STEP 2.1: BTN CLICK LISTENER
         binding.btnStart.setOnClickListener {
+            // STEP 2.2: CREATE INTENT
+            // Explicit intent to go to MainActivity.
             val intent = Intent(this, MainActivity::class.java)
+            
+            // STEP 2.3: TRIGGER TRANSITION
             startActivity(intent)
-            // finish() ensures the user cannot return to the splash screen using the back button.
+            
+            // STEP 2.4: CLOSE SPLASH
+            // We call finish() so the user can't click 'back' to see the splash screen again.
             finish()
         }
-        */
     }
 
-    // STEP 3 (Detailed): Exit Logic
-    private fun setupExitButton() {
-        // Replace 'btnExit' with your button ID in XML
-        /*
-        binding.btnExit.setOnClickListener {
+    private fun setupExitAppButton() {
+        // STEP 3.1: BTN CLICK LISTENER
+        binding.btnExitSplash.setOnClickListener {
+            // STEP 3.2: KILL APP
             finishAffinity()
         }
-        */
     }
 }
