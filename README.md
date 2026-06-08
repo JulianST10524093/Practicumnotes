@@ -1,3 +1,4 @@
+app src main java.kt or androidmanifest for xml
 # Practicum Assessment - Multipurpose App Template
 
 This project is a high-quality, professional-grade template designed for Android Practicum assessments. It uses **Parallel Arrays**, **Loops**, **Intents**, and **View Binding**.
