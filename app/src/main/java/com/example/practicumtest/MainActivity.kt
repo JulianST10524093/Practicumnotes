@@ -8,109 +8,113 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.practicumtest.databinding.ActivityMainBinding
 
 /**
- * MAIN SCREEN: MULTIPURPOSE TEMPLATE
- * This code is designed to be easily modified for any situation (Weather, Grades, etc.)
+ * --- MULTIPURPOSE MAIN SCREEN TEMPLATE ---
+ * This code is built to be "Bulletproof" and "Interchangeable".
+ * 
+ * HOW TO CHANGE THIS FOR DIFFERENT QUESTIONS:
+ * 1. Change the names and values in the arrays below (e.g., Change "Monday" to "Product A").
+ * 2. Update the labels in the strings (e.g., Change "Average Temp" to "Average Sales").
+ * 3. Ensure your XML IDs match the binding calls (e.g., binding.btnCalculate).
  */
 class MainActivity : AppCompatActivity() {
 
-    // STEP 1: DECLARE DATA (PARALLEL ARRAYS)
-    // Parallel arrays store related information at the same index position.
-    // Modify these values to change the application's "situation".
+    // --- STEP 1: THE DATA (PARALLEL ARRAYS) ---
+    // Why use arrays? To store multiple pieces of information of the same type.
+    // Why "Parallel"? Because index 0 in 'categories' matches index 0 in 'dataValues1', etc.
+    
+    // CHANGE THESE to suit your specific question (Weather, Grades, Shopping, etc.)
     private var categories = arrayOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
-    private var dataValues1 = doubleArrayOf(12.0, 15.0, 10.0, 12.0, 11.0, 10.0, 10.0)
-    private var dataValues2 = doubleArrayOf(25.0, 29.0, 22.0, 24.0, 23.0, 18.0, 16.0)
-    private var conditions = arrayOf("Sunny", "Sunny", "Cloudy", "Rainy", "Cloudy", "Raining", "Cold")
+    private var dataValues1 = doubleArrayOf(12.0, 15.0, 10.0, 12.0, 11.0, 10.0, 10.0) // e.g., Min Temp or Price
+    private var dataValues2 = doubleArrayOf(25.0, 29.0, 22.0, 24.0, 23.0, 18.0, 16.0) // e.g., Max Temp or Stock
+    private var extraInfo = arrayOf("Sunny", "Sunny", "Cloudy", "Rainy", "Cloudy", "Raining", "Cold") // e.g., Conditions or Description
 
-    // Binding variable allows us to access UI elements without using 'findViewById'
+    // Binding variable connects this code to activity_main.xml
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // STEP 2: INITIALIZE BINDING
-        // Connects this Kotlin file to activity_main.xml
+        // --- STEP 2: INITIALIZE THE SCREEN ---
+        // inflate() prepares the layout, and setContentView() puts it on the screen.
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // STEP 3: SETUP CALCULATIONS
-        // This function holds the logic for processing the numeric data in the arrays.
+        // Initialize our buttons and logic
+        Log.d("AppLifecycle", "MainActivity Created - Initializing UI")
         setupCalculateButton()
-
-        // STEP 4: SETUP RESET LOGIC
-        // This function allows the user to clear the inputs and re-input data.
         setupClearButton()
-
-        // STEP 5: SETUP NAVIGATION
-        // This function handles moving the data to the Detailed View screen.
         setupDetailedViewButton()
-
-        // STEP 6: SETUP EXIT
-        // Completely closes the application.
         setupExitButton()
     }
 
-    // --- LOGIC FUNCTIONS ---
-
+    // --- STEP 3: CALCULATIONS (THE LOOP) ---
+    // This function calculates the average. It is "Bulletproof" because it handles empty arrays.
     private fun setupCalculateButton() {
         binding.btnCalculate.setOnClickListener {
-            // STEP 3.1: LOOP FOR SUMMATION
-            // We use a loop to iterate through the array and find the total sum.
+            Log.d("UserAction", "Calculate Button Clicked")
+            // A loop is used to go through each number and add it to a total.
             var total = 0.0
             for (value in dataValues2) {
                 total += value
             }
 
-            // STEP 3.2: CALCULATE AVERAGE
-            // Use 'size' to divide the total by the number of items.
+            // Calculate average: Total divided by the number of items.
+            // Check if not empty to avoid "Division by Zero" error.
             val average = if (dataValues2.isNotEmpty()) total / dataValues2.size else 0.0
 
-            // STEP 3.3: UPDATE UI
-            // String.format("%.1f", average) ensures only 1 decimal place is shown.
+            // UPDATE UI: Show the result.
+            // String.format("%.1f", ...) rounds to 1 decimal place.
             binding.txtAverage.text = "Average: ${String.format("%.1f", average)}"
 
-            // STEP 3.4: LOGGING
-            // Logging demonstrates understanding and helps with debugging.
-            Log.d("LogicInfo", "Sum: $total, Count: ${dataValues2.size}, Average: $average")
+            // LOGGING: Prints info to the Logcat (helps for debugging).
+            Log.d("AppDebug", "Calculated Sum: $total, Average: $average")
         }
     }
 
+    // --- STEP 4: RESET / CLEAR LOGIC ---
+    // This allows the user to wipe the data and start over.
     private fun setupClearButton() {
         binding.btnClear.setOnClickListener {
-            // STEP 4.1: RESET ARRAYS
-            // A loop is used here to clear every position in the parallel arrays.
+            Log.d("UserAction", "Clear Button Clicked")
+            // A loop is used to set every number in the arrays back to zero.
             for (i in dataValues1.indices) {
                 dataValues1[i] = 0.0
                 dataValues2[i] = 0.0
             }
 
-            // STEP 4.2: RESET UI & FEEDBACK
+            // Update UI to show data is cleared
             binding.txtAverage.text = "Average: 0.0"
-            Toast.makeText(this, "Data has been reset.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "All data has been cleared.", Toast.LENGTH_SHORT).show()
+            Log.d("AppDebug", "All array data reset to 0.0")
         }
     }
 
+    // --- STEP 5: NAVIGATION (PASSING DATA) ---
+    // This moves us to the next screen and takes our data arrays with us.
     private fun setupDetailedViewButton() {
         binding.btnDetailed.setOnClickListener {
-            // STEP 5.1: CREATE INTENT
-            // Intents are used to transition between activities.
+            Log.d("UserAction", "Navigating to Detailed View")
+            // Intent is like an envelope that carries data to another activity.
             val intent = Intent(this, DetailedViewActivity::class.java)
 
-            // STEP 5.2: ATTACH DATA
-            // We 'put' the parallel arrays into the intent using unique keys.
-            intent.putExtra("KEY_CATEGORIES", categories)
+            // 'putExtra' puts the data into the envelope using a unique "Key".
+            intent.putExtra("KEY_CAT", categories)
             intent.putExtra("KEY_VAL1", dataValues1)
             intent.putExtra("KEY_VAL2", dataValues2)
-            intent.putExtra("KEY_COND", conditions)
+            intent.putExtra("KEY_EXTRA", extraInfo)
 
-            // STEP 5.3: START NAVIGATION
+            // Send the envelope and change screens.
+            Log.d("AppDebug", "Data packaged into Intent. Array size: ${categories.size}")
             startActivity(intent)
         }
     }
 
+    // --- STEP 6: EXIT ---
+    // Closes everything.
     private fun setupExitButton() {
         binding.btnExit.setOnClickListener {
-            // STEP 6.1: EXIT SYSTEM
-            // finishAffinity() closes all activities in the stack.
+            Log.d("UserAction", "Exit Button Clicked - Closing App")
+            // finishAffinity() closes all activities in the app.
             finishAffinity()
         }
     }

@@ -5,68 +5,68 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.practicumtest.databinding.ActivityDetailedViewBinding
 
 /**
- * DETAILED VIEW: MULTIPURPOSE TEMPLATE
- * This screen displays a comprehensive log of all the data from the parallel arrays.
+ * --- MULTIPURPOSE DETAILED VIEW ---
+ * This screen receives the parallel arrays and displays them in a list format.
+ * 
+ * INTERCHANGEABILITY:
+ * The text "Item", "Value 1", etc., can be changed in the loop to suit any topic.
  */
 class DetailedViewActivity : AppCompatActivity() {
 
-    // View Binding for activity_detailed_view.xml
     private lateinit var binding: ActivityDetailedViewBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // STEP 1: INITIALIZE VIEW BINDING
-        // Connects the Kotlin code to the XML layout elements.
+        
+        // --- STEP 1: INITIALIZE ---
+        android.util.Log.d("AppLifecycle", "DetailedViewActivity Created")
         binding = ActivityDetailedViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // STEP 2: PROCESS INCOMING DATA
-        // Retrieves the arrays passed from MainActivity and displays them.
+        // Run the logic to pull data from the Intent and display it.
         displayDetailedData()
 
-        // STEP 3: SETUP BACK NAVIGATION
-        // Logic to return to the previous screen.
+        // Set up the back button logic.
         setupBackButton()
     }
 
-    // --- DISPLAY & NAVIGATION ---
-
+    // --- STEP 2: DATA PROCESSING (THE LOOP) ---
     private fun displayDetailedData() {
-        // STEP 2.1: EXTRACT ARRAYS FROM INTENT
-        // Using the exact same keys we used in MainActivity to 'put' the data.
-        val categories = intent.getStringArrayExtra("KEY_CATEGORIES")
+        android.util.Log.d("AppDebug", "Starting data processing for Detailed View")
+        // Retrieve the data arrays from the Intent using the keys we created in MainActivity.
+        val categories = intent.getStringArrayExtra("KEY_CAT")
         val val1 = intent.getDoubleArrayExtra("KEY_VAL1")
         val val2 = intent.getDoubleArrayExtra("KEY_VAL2")
-        val notes = intent.getStringArrayExtra("KEY_COND")
+        val extra = intent.getStringArrayExtra("KEY_EXTRA")
 
-        // STEP 2.2: BUILD DISPLAY STRING
-        // StringBuilder is more efficient than standard String concatenation in loops.
-        val detailedLog = StringBuilder()
+        // StringBuilder is used to build one big string containing all our information.
+        val report = StringBuilder()
 
-        // STEP 2.3: LOOP THROUGH DATA
-        // Check for null to prevent app crashes if data wasn't sent correctly.
-        if (categories != null && val1 != null && val2 != null && notes != null) {
+        // THE LOOP: We check if the data exists, then go through every item.
+        if (categories != null && val1 != null && val2 != null && extra != null) {
+            android.util.Log.d("AppDebug", "Data received successfully. Items count: ${categories.size}")
             for (i in categories.indices) {
-                // Formatting the data for each item/day
-                detailedLog.append("Item: ${categories[i]}\n")
-                detailedLog.append("Min Temp: ${val1[i]}°C\n")
-                detailedLog.append("Max Temp: ${val2[i]}°C\n")
-                detailedLog.append("Condition: ${notes[i]}\n\n")
-                detailedLog.append("----------------------------\n\n")
+                // Formatting: Change these labels (Item, Min, Max) to suit your question!
+                report.append("Day/Item: ${categories[i]}\n")
+                report.append("Value 1: ${val1[i]}\n")
+                report.append("Value 2: ${val2[i]}\n")
+                report.append("Details: ${extra[i]}\n")
+                report.append("----------------------------\n\n")
             }
+        } else {
+            android.util.Log.e("AppDebug", "Error: Some data was null in Intent")
         }
 
-        // STEP 2.4: APPLY TO UI
-        // Put the entire built string into the TextView.
-        binding.txtDetailedData.text = detailedLog.toString()
+        // Apply the final string to our TextView.
+        binding.txtDetailedData.text = report.toString()
+        android.util.Log.d("AppDebug", "Report generated and displayed")
     }
 
+    // --- STEP 3: GO BACK ---
     private fun setupBackButton() {
-        // STEP 3.1: BTN CLICK LISTENER
         binding.btnBack.setOnClickListener {
-            // STEP 3.2: CLOSE CURRENT ACTIVITY
-            // This automatically takes the user back to MainActivity.
+            android.util.Log.d("UserAction", "Back Button Clicked - Returning to Main")
+            // finish() simply closes this activity and reveals the previous one.
             finish()
         }
     }
