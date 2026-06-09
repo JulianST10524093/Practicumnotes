@@ -1,4 +1,5 @@
 app src main java.kt or androidmanifest for xml
+.
 The Simple Difference
 •
 XML File (The Skeleton): Used for Design. This is where you place buttons, text boxes, and images. It defines what the app looks like.
